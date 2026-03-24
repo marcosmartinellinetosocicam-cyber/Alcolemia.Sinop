@@ -34,7 +34,7 @@
       font-size: 16px;
     }
 
-    /* Conteúdo do Sorteio (Inicia escondido) */
+    /* Conteúdo do Sorteio */
     #conteudoSorteio { display: none; }
 
     h2 { margin-bottom: 20px; font-size: 28px; color: #fff; text-shadow: 1px 1px 2px #000; }
@@ -110,9 +110,9 @@
   </div>
 
   <script>
-    // --- CREDENCIAIS ATUALIZADAS ---
+    // --- CREDENCIAIS AJUSTADAS ---
     const LOGIN_CORRETO = "Unidade.sinop26";
-    const SENHA_CORRETA = "Sinop2026"; // Incluído o "Senha:" conforme solicitado
+    const SENHA_CORRETA = "Sinop2026";
 
     function verificarLogin() {
       const u = document.getElementById("usuario").value;
@@ -126,7 +126,7 @@
       }
     }
 
-    // --- NOVA LISTA DE NOMES SINOP ---
+    // --- LISTA DE NOMES SINOP ---
     const nomes = [
       "DANIEL DE SOUSA SILVA", "FERNANDA TOZETTO LANDO",
       "IRACI JUSCELINO SCUSSIATOLIO", "MAR COSTA REPEZUK",
@@ -152,26 +152,26 @@
     }
 
     function salvarHistorico(nome) {
-      const historico = JSON.parse(localStorage.getItem("hist_sinop_26")) || [];
+      const historico = JSON.parse(localStorage.getItem("hist_sinop_v2")) || [];
       const registro = { 
         numero: historico.length + 1, 
         data: new Date().toLocaleString('pt-BR'), 
         sorteado: nome 
       };
       historico.push(registro);
-      localStorage.setItem("hist_sinop_26", JSON.stringify(historico));
+      localStorage.setItem("hist_sinop_v2", JSON.stringify(historico));
       atualizarHistorico();
     }
 
     function atualizarHistorico() {
-      const historico = JSON.parse(localStorage.getItem("hist_sinop_26")) || [];
+      const historico = JSON.parse(localStorage.getItem("hist_sinop_v2")) || [];
       const div = document.getElementById("listaHistorico");
       div.innerHTML = "";
       [...historico].reverse().forEach(item => {
         div.innerHTML += `
           <div class="historico-item">
             <strong>Sorteio #${item.numero}</strong><br>
-            📅 Data/Hora: ${item.data}<br>
+            📅 Data: ${item.data}<br>
             👤 Nome: <strong>${item.sorteado}</strong>
           </div>`;
       });
@@ -183,8 +183,8 @@
     }
 
     function baixarCSV() {
-      const historico = JSON.parse(localStorage.getItem("hist_sinop_26")) || [];
-      if(historico.length === 0) return alert("Não há dados para exportar.");
+      const historico = JSON.parse(localStorage.getItem("hist_sinop_v2")) || [];
+      if(historico.length === 0) return alert("Não há dados!");
       let csv = "Numero,Data,Selecionado\n";
       historico.forEach(item => csv += `${item.numero},"${item.data}","${item.sorteado}"\n`);
       const blob = new Blob(["\ufeff" + csv], {type: "text/csv;charset=utf-8;"});
@@ -196,18 +196,16 @@
     }
 
     function limparHistorico() {
-      if(confirm("Deseja apagar permanentemente o histórico desta unidade?")) {
-        localStorage.removeItem("hist_sinop_26");
+      if(confirm("Deseja apagar o histórico de Sinop?")) {
+        localStorage.removeItem("hist_sinop_v2");
         document.getElementById("resultado").innerText = "Aguardando sorteio...";
         atualizarHistorico();
       }
     }
 
-    // Login com tecla Enter
     document.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') verificarLogin();
     });
   </script>
-
 </body>
 </html>
